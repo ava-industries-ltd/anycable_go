@@ -97,7 +97,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: docker/Dockerfile.mrb-linux-amd64
+          file: .docker/Dockerfile.mrb-linux-amd64
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: |
