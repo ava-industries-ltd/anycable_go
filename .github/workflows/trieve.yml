@@ -7,7 +7,7 @@ on:
       - v1.4.*
       - v1.5.*
     branches:
-      - master
+      - master2
   workflow_dispatch:
 
 jobs:
