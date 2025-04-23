@@ -15,14 +15,12 @@ data "aws_acm_certificate" "physician" {
 
 locals {
   account_id = data.aws_caller_identity.current.account_id
-  name ="${var.name}-emr"
+  name ="${var.name}-anycable"
   private_subnet_ids = split(",", var.vpc_private_subnets)
   public_subnet_ids  = split(",", var.vpc_public_subnets)
+  container_command = null
   container_environment_variables = [
-    { "name" : "PORT", "value" : "80" },
     { "name" : "ENVIRONMENT", "value" : "${var.rails_env}" },
-    { "name" : "RAILS_ENV", "value" : "${var.rails_env}" },
-    { "name" : "RACK_ENV", "value" : "${var.rails_env}" },
     { "name" : "AWS_REGION", "value" : "ca-central-1" },
     { "name" : "POSTGRES_ENDPOINT", "value" : "${var.postgres_endpoint}" },
     { "name" : "POSTGRES_REPLICA_ENDPOINT", "value" : "${var.postgres_reader_endpoint}" },
@@ -34,14 +32,7 @@ locals {
     { "name" : "AUDIT_POSTGRES_REPLICA_ENDPOINT", "value" : "${var.audit_replica_endpoint}" },
     { "name" : "AUDIT_POSTGRES_REPLICA_PORT", "value" : "${var.audit_replica_port}" },
     { "name" : "REDIS_PORT", "value" : "${var.redis_port}" },
-    { "name" : "REDIS_ENDPOINT", "value" : "${var.redis_endpoint}" },
-    { "name" : "SQS_FAX_DOWNLOADER", "value" : "${var.sqs_fax_downloader_id}" },
-    { "name" : "SQS_FAX_STATUS", "value" : "${var.sqs_fax_status_id}" },
-    { "name" : "SQS_MAILER", "value" : "${var.sqs_mailer_id}" },
-    { "name" : "SQS_LABS", "value" : "${var.sqs_labs_id}" },
-    { "name" : "SQS_BILLS", "value" : "${var.sqs_bills_id}" },
-    { "name" : "SQS_GENERAL", "value" : "${var.sqs_general_id}" },
-    { "name" : "ACTIVE_STORAGE_BUCKET", "value" : "${var.storage_bucket_id}" }
+    { "name" : "REDIS_ENDPOINT", "value" : "${var.redis_endpoint}" }
   ]
   container_secrets = [
     {
@@ -61,10 +52,6 @@ locals {
       "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/database/postgres/replica_username"
     },
     {
-      "name" : "SECRET_KEY_BASE",
-      "valueFrom" : "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/application/rails/SECRET_KEY_BASE"
-    },
-    {
       "name" : "AUDIT_POSTGRES_REPLICA_PASSWORD",
       "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/database/audit_postgres/replica_password"
     },
@@ -73,5 +60,4 @@ locals {
       "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/database/audit_postgres/replica_username"
     }
   ]
-  container_command = ["bundle", "exec", "rails", "s", "-p", "80", "-b", "0.0.0.0"]
 }

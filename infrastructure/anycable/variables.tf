@@ -20,9 +20,6 @@ variable "profile" {
 }
 
 # Terraform variables
-variable "desired_capacity" {
-  type = string
-}
 
 variable "physician_domain" {
   type = string
@@ -53,27 +50,13 @@ variable "master_account_id" {
 }
 
 variable "cpu" {
-  type = string
-}
-
-variable "cpu_integer" {
   type = number
-}
-
-variable "ecs_desired_count" {
-  type = number
-}
-
-variable "ecs_anycable_name" {
-  type = string
+  default = 4096
 }
 
 variable "memory" {
-  type = string
-}
-
-variable "memory_integer" {
   type = number
+  default = 15800
 }
 
 variable "rails_env" {
@@ -90,9 +73,10 @@ variable "redis_port" {
 
 variable "ava_anycable_image" {
   type = string
+  default = "250012284601.dkr.ecr.ca-central-1.amazonaws.com/anycable-go"
 }
 
-variable "ava_anycable_version" {
+variable "ecr_emr_anycable_go_version" {
   type = string
 }
 
@@ -219,7 +203,7 @@ variable "desired_count" {
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
-  default     = "t3.micro"
+  default     = "t4g.xlarge"
 }
 
 variable "log_retention_days" {
