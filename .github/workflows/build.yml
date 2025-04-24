@@ -51,6 +51,7 @@ jobs:
           context: .
           file: .docker/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/arm64
           push: true
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO_NAME }}:${{ env.ARTIFACT_TAG }}

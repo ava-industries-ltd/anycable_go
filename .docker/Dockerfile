@@ -1,57 +1,51 @@
-# .docker/Dockerfile.local
-
+# syntax=docker/dockerfile:1.3
 #####################################
-# Stage 1: Builder                  #
+# Stage 1: AMD64 Builder            #
 #####################################
-FROM --platform=linux/arm64 golang:1.23-bullseye AS builder
+FROM golang:1.23-bullseye AS builder
 
-# Enable CGO and modules
+# Install ARM64 cross-compiler and Ruby for MRuby build
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
+      ruby2.7 ruby2.7-dev build-essential bison zip git \
+ && rm -rf /var/lib/apt/lists/*
+
+# Set up cross-compilation environment
 ENV CGO_ENABLED=1 \
-    GO111MODULE=on
-
-# Install system deps: bison for MRuby, zip (if you need it locally), git & Ruby for go-mruby
-RUN apt-get update && \
-    apt-get install -y \
-      bison \
-      zip \
-      git \
-      ruby2.7 \
-      ruby2.7-dev \
-      build-essential && \
-    rm -rf /var/lib/apt/lists/*
+    GO111MODULE=on \
+    CC=aarch64-linux-gnu-gcc \
+    AR=aarch64-linux-gnu-ar \
+    RANLIB=aarch64-linux-gnu-ranlib
 
 WORKDIR /src
-
-# 1) Copy everything (including go.mod/go.sum)
 COPY . .
 
-# 2) Vendor all Go modules (this creates ./vendor/)
+# Vendor Go modules
 RUN go mod vendor
 
-# 3) Build the MRuby static lib
-RUN cd vendor/github.com/mitchellh/go-mruby && \
-    MRUBY_CONFIG=../../../../../../etc/build_config.rb \
-    make libmruby.a
+# Build MRuby static lib for ARM64
+RUN cd vendor/github.com/mitchellh/go-mruby \
+ && MRUBY_CONFIG=../../../../../../etc/build_config.rb make libmruby.a
 
-# 4) Build the AnyCable‑Go executable with the 'mrb' tag
-RUN go build -tags mrb \
-    -ldflags "\
-      -s -w \
-      -X github.com/anycable/anycable-go/version.version=$(git describe --tags --always --dirty) \
-      -X github.com/anycable/anycable-go/version.sha=$(git rev-parse --short HEAD)" \
-    -o anycable-go-mrb \
-    cmd/anycable-go/main.go
+# Cross-compile the AnyCable-Go binary for linux/arm64
+RUN GOOS=linux GOARCH=arm64 \
+    go build -tags mrb \
+      -ldflags "\
+        -s -w \
+        -X github.com/anycable/anycable-go/version.version=$(git describe --tags --always --dirty) \
+        -X github.com/anycable/anycable-go/version.sha=$(git rev-parse --short HEAD)" \
+      -o anycable-go-mrb \
+      cmd/anycable-go/main.go
 
 #####################################
-# Stage 2: Slim Runtime             #
+# Stage 2: ARM64 Runtime            #
 #####################################
 FROM --platform=linux/arm64 debian:bullseye-slim
 
-# Copy only the final binary in
+# Only copy the pre-built ARM64 binary (no RUN steps)
 COPY --from=builder /src/anycable-go-mrb /usr/local/bin/anycable-go
 
 USER nobody
-
 EXPOSE 8080
-
 ENTRYPOINT ["/usr/local/bin/anycable-go"]
