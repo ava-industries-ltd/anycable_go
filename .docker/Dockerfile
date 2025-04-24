@@ -3,7 +3,7 @@
 #####################################
 # Stage 1: Builder                  #
 #####################################
-FROM golang:1.23-bullseye AS builder
+FROM --platform=linux/arm64 golang:1.23-bullseye AS builder
 
 # Enable CGO and modules
 ENV CGO_ENABLED=1 \
@@ -45,7 +45,7 @@ RUN go build -tags mrb \
 #####################################
 # Stage 2: Slim Runtime             #
 #####################################
-FROM debian:bullseye-slim
+FROM --platform=linux/arm64 debian:bullseye-slim
 
 # Copy only the final binary in
 COPY --from=builder /src/anycable-go-mrb /usr/local/bin/anycable-go

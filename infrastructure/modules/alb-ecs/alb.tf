@@ -120,7 +120,7 @@ resource "aws_wafv2_web_acl_association" "main" {
 ###########################
 
 resource "aws_s3_bucket" "alb_logs" {
-  count = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
+  count  = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
   bucket = "${var.name}-logs"
 
   lifecycle {
@@ -136,12 +136,14 @@ resource "aws_s3_bucket" "alb_logs" {
 
 
 resource "aws_s3_bucket_lifecycle_configuration" "alb_logs" {
-  count = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
-  bucket   = aws_s3_bucket.alb_logs[0].id
+  count  = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
+  bucket = aws_s3_bucket.alb_logs[0].id
 
   rule {
     id     = "log"
     status = "Enabled"
+
+    filter { prefix = "" }
 
     transition {
       days          = 30
@@ -156,7 +158,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "alb_logs" {
 }
 
 resource "aws_s3_bucket_versioning" "alb_logs" {
-  count = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
+  count  = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
   bucket = aws_s3_bucket.alb_logs[0].id
   versioning_configuration {
     status = "Enabled"
@@ -164,7 +166,7 @@ resource "aws_s3_bucket_versioning" "alb_logs" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "alb_logs" {
-  count = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
+  count  = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
   bucket = aws_s3_bucket.alb_logs[0].bucket
 
   rule {
@@ -175,7 +177,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "alb_logs" {
 }
 
 resource "aws_s3_bucket_public_access_block" "alb_logs" {
-  count = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
+  count  = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
   bucket = aws_s3_bucket.alb_logs[0].id
 
   block_public_acls       = true
@@ -185,7 +187,7 @@ resource "aws_s3_bucket_public_access_block" "alb_logs" {
 }
 
 data "aws_iam_policy_document" "alb_logs" {
-  count = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
+  count     = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
   policy_id = "${aws_s3_bucket.alb_logs[0].id}-policy"
   statement {
     sid     = "AllowSSLRequestsOnly"
@@ -208,7 +210,7 @@ data "aws_iam_policy_document" "alb_logs" {
 }
 
 resource "aws_s3_bucket_policy" "alb_logs" {
-  count = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
+  count      = var.alb_logging_enabled && var.alb_logging_bucket == null ? 1 : 0
   bucket     = aws_s3_bucket.alb_logs[0].id
   policy     = data.aws_iam_policy_document.alb_logs[0].json
   depends_on = [aws_s3_bucket_public_access_block.alb_logs[0]]

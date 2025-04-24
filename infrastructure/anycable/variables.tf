@@ -56,7 +56,7 @@ variable "cpu" {
 
 variable "memory" {
   type = number
-  default = 15800
+  default = 15750
 }
 
 variable "rails_env" {
@@ -76,7 +76,7 @@ variable "ava_anycable_image" {
   default = "250012284601.dkr.ecr.ca-central-1.amazonaws.com/anycable-go"
 }
 
-variable "ecr_emr_anycable_go_version" {
+variable "anycable_go_version" {
   type = string
 }
 
@@ -161,37 +161,37 @@ variable "container_port" {
 variable "health_check_path" {
   description = "Path for ALB health checks"
   type        = string
-  default     = "/health_checks"
+  default     = "/health"
 }
 
 variable "health_check_healthy_threshold" {
   description = "Number of consecutive health check successes required"
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "health_check_unhealthy_threshold" {
   description = "Number of consecutive health check failures required"
   type        = number
-  default     = 3
+  default     = 2
 }
 
 variable "health_check_timeout" {
   description = "Health check timeout in seconds"
   type        = number
-  default     = 120
+  default     = 5
 }
 
 variable "health_check_interval" {
   description = "Health check interval in seconds"
   type        = number
-  default     = 300
+  default     = 30
 }
 
 variable "health_check_matcher" {
   description = "HTTP response codes to consider as healthy"
   type        = string
-  default     = "200-499"
+  default     = "200-399"
 }
 
 variable "desired_count" {
