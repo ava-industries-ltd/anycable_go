@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "anycable_task" {
 }
 
 resource "aws_iam_policy" "anycable_task" {
-  name   = "${local.name}-ecs-task-policy"
+  name   = "${local.anycable_name}-ecs-task-policy"
   policy = data.aws_iam_policy_document.anycable_task.json
 }
 

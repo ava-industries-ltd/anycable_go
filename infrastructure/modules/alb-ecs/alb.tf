@@ -55,10 +55,9 @@ resource "aws_lb" "main" {
   tags = var.tags
 }
 
-# ALB HTTPS Listener on port 443
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.main.arn
-  port              = 443
+  port              = var.use_grpc ? var.container_port : 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
   certificate_arn   = var.acm_certificate_arn
@@ -69,8 +68,8 @@ resource "aws_lb_listener" "https" {
   }
 }
 
-# ALB HTTP Listener on port 80 that redirects to HTTPS
 resource "aws_lb_listener" "http" {
+  count             = var.use_grpc ? 0 : 1
   load_balancer_arn = aws_lb.main.arn
   port              = 80
   protocol          = "HTTP"
@@ -88,11 +87,12 @@ resource "aws_lb_listener" "http" {
 
 # ALB Target Group
 resource "aws_lb_target_group" "main" {
-  name        = "${var.name}-target-group"
-  port        = var.container_port
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
-  target_type = "ip"
+  name             = "${var.name}-target-group"
+  port             = var.container_port
+  vpc_id           = var.vpc_id
+  target_type      = "ip"
+  protocol         = var.use_grpc ? "HTTPS" : "HTTP"
+  protocol_version = var.use_grpc ? "GRPC" : null
 
   health_check {
     # protocol            = "HTTPS"

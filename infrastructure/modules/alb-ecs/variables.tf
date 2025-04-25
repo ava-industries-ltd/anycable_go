@@ -326,3 +326,9 @@ variable "alb_logging_bucket" {
   type    = string
   default = null
 }
+
+variable "use_grpc" {
+  description = "If true, configure the target group and listener for gRPC on rpc_port"
+  type        = bool
+  default     = false
+}

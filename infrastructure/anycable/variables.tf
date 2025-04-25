@@ -49,12 +49,22 @@ variable "master_account_id" {
   type = string
 }
 
-variable "cpu" {
+variable "grpc_cpu" {
   type = number
   default = 4096
 }
 
-variable "memory" {
+variable "grpc_memory" {
+  type = number
+  default = 15750
+}
+
+variable "anycable_cpu" {
+  type = number
+  default = 4096
+}
+
+variable "anycable_memory" {
   type = number
   default = 15750
 }
@@ -140,74 +150,125 @@ variable "allowed_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "internal_alb" {
-  description = "Whether the ALB should be internal"
-  type        = bool
-  default     = false
-}
-
 variable "enable_deletion_protection" {
   description = "Whether to enable deletion protection on the ALB"
   type        = bool
   default     = false
 }
 
-variable "container_port" {
-  description = "Port exposed by the container"
-  type        = number
-  default     = 80
-}
-
-variable "health_check_path" {
+variable "anycable_health_check_path" {
   description = "Path for ALB health checks"
   type        = string
   default     = "/health"
 }
 
-variable "health_check_healthy_threshold" {
+variable "anycable_health_check_healthy_threshold" {
   description = "Number of consecutive health check successes required"
   type        = number
   default     = 3
 }
 
-variable "health_check_unhealthy_threshold" {
+variable "anycable_health_check_unhealthy_threshold" {
   description = "Number of consecutive health check failures required"
   type        = number
   default     = 2
 }
 
-variable "health_check_timeout" {
+variable "anycable_health_check_timeout" {
   description = "Health check timeout in seconds"
   type        = number
   default     = 5
 }
 
-variable "health_check_interval" {
+variable "anycable_health_check_interval" {
   description = "Health check interval in seconds"
   type        = number
   default     = 30
 }
 
-variable "health_check_matcher" {
+variable "anycable_health_check_matcher" {
   description = "HTTP response codes to consider as healthy"
   type        = string
   default     = "200-399"
 }
 
-variable "desired_count" {
-  description = "Desired number of tasks/instances"
+#############
+variable "grpc_container_port" {
+  description = "Port exposed by the container"
+  type        = number
+  default     = 80
+}
+
+variable "grpc_health_check_path" {
+  description = "Path for ALB health checks"
+  type        = string
+  default     = "/grpc.health.v1.Health/Check"
+}
+
+variable "grpc_health_check_healthy_threshold" {
+  description = "Number of consecutive health check successes required"
+  type        = number
+  default     = 3
+}
+
+variable "grpc_health_check_unhealthy_threshold" {
+  description = "Number of consecutive health check failures required"
+  type        = number
+  default     = 2
+}
+
+variable "grpc_health_check_timeout" {
+  description = "Health check timeout in seconds"
+  type        = number
+  default     = 5
+}
+
+variable "grpc_health_check_interval" {
+  description = "Health check interval in seconds"
+  type        = number
+  default     = 30
+}
+
+variable "grpc_health_check_matcher" {
+  description = "HTTP response codes to consider as healthy"
+  type        = string
+  default     = "0"
+}
+
+variable "anycable_desired_count" {
+  description = "Desired number of tasks/instances for Anycable"
   type        = number
   default     = 1
 }
 
-variable "instance_type" {
-  description = "EC2 instance type"
+variable "grpc_desired_count" {
+  description = "Desired number of tasks/instances for gRPC"
+  type        = number
+  default     = 1
+}
+
+variable "anycable_instance_type" {
+  description = "EC2 instance type for Anycable"
   type        = string
   default     = "t4g.xlarge"
+}
+
+variable "grpc_instance_type" {
+  description = "EC2 instance type for gRPC"
+  type        = string
+  default     = "t3.xlarge"
 }
 
 variable "log_retention_days" {
   description = "Number of days to retain CloudWatch logs"
   type        = number
   default     = 365
+}
+
+variable "ava_emr_image" {
+  type = string
+}
+
+variable "ava_emr_version" {
+  type = string
 }
