@@ -54,6 +54,12 @@ variable "grpc_cpu" {
   default = 4096
 }
 
+variable "grpc_port" {
+  type = number
+  default = 50051
+}
+
+
 variable "grpc_memory" {
   type = number
   default = 15750
@@ -190,13 +196,6 @@ variable "anycable_health_check_matcher" {
   description = "HTTP response codes to consider as healthy"
   type        = string
   default     = "200-399"
-}
-
-#############
-variable "grpc_container_port" {
-  description = "Port exposed by the container"
-  type        = number
-  default     = 80
 }
 
 variable "grpc_health_check_path" {

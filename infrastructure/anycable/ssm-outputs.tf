@@ -13,18 +13,9 @@
 # }
 
 
-# # Outputs
-# output "alb_dns_name" {
-#   description = "The DNS name of the ALB"
-#   value       = module.ecs_service.alb_dns_name
-# }
-
-# output "ecs_service_name" {
-#   description = "The ECS service name"
-#   value       = module.ecs_service.ecs_service_name
-# }
-
-# output "ecs_cluster_name" {
-#   description = "The ECS cluster name"
-#   value       = module.ecs_service.ecs_cluster_name
-# }
+resource "aws_ssm_parameter" "anycable_rpc_host" {
+  name        = "/ava/${var.environment}/config/anycable/rpc_host"
+  description = "EMR task role name for ${var.name}-${var.environment}"
+  type        = "String"
+  value       = module.grpc.ecs_service_dns
+}

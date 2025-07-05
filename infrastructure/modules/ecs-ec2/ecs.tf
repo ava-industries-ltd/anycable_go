@@ -16,13 +16,6 @@ resource "aws_security_group" "ecs_tasks" {
   description = "Security group for ECS tasks"
   vpc_id      = var.vpc_id
 
-  ingress {
-    from_port       = var.container_port
-    to_port         = var.container_port
-    protocol        = "tcp"
-    security_groups = [aws_security_group.alb.id]
-  }
-
   egress {
     from_port        = 0
     to_port          = 0
@@ -74,6 +67,7 @@ resource "aws_ecs_task_definition" "main" {
       secrets              = var.container_secrets
       command              = var.container_command
       resourceRequirements = var.resource_requirements
+
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -82,6 +76,9 @@ resource "aws_ecs_task_definition" "main" {
           "awslogs-stream-prefix" = "ecs"
         }
       }
+
+      healthCheck = local.healthcheck
+
     }
   ])
 
@@ -153,16 +150,14 @@ resource "aws_ecs_service" "manual" {
     type = "distinctInstance"
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.main.arn
-    container_name   = var.name
-    container_port   = var.container_port
-  }
-
   network_configuration {
     subnets          = var.ecs_subnet_ids
     security_groups  = [aws_security_group.ecs_tasks.id]
     assign_public_ip = false
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.main.arn
   }
 
   tags = var.tags
@@ -170,8 +165,6 @@ resource "aws_ecs_service" "manual" {
   lifecycle {
     create_before_destroy = true
   }
-
-  depends_on = [aws_lb_listener.https]
 }
 
 resource "aws_ecs_service" "autoscaled" {
@@ -193,12 +186,6 @@ resource "aws_ecs_service" "autoscaled" {
     type = "distinctInstance"
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.main.arn
-    container_name   = var.name
-    container_port   = var.container_port
-  }
-
   network_configuration {
     subnets          = var.ecs_subnet_ids
     security_groups  = [aws_security_group.ecs_tasks.id]
@@ -211,8 +198,6 @@ resource "aws_ecs_service" "autoscaled" {
     create_before_destroy = true
     ignore_changes        = [desired_count]
   }
-
-  depends_on = [aws_lb_listener.https]
 }
 
 # Create ECS Capacity Provider
