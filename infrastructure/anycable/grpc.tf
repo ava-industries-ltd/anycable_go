@@ -16,7 +16,7 @@ module "grpc" {
   container_secrets      = local.grpc_container_secrets
   container_command      = local.grpc_container_command
   container_port         = var.grpc_port
-  health_check_command   = ["CMD", "grpc-health-probe", "-addr=127.0.0.1:50051", "-connect-timeout", "1s", "-rpc-timeout", "2s"]
+  health_check_command   = ["CMD-SHELL", "curl -sf http://localhost:${var.grpc_health_port}${var.grpc_health_path} || exit 1"]
   enable_ecs_autoscaling = false
 
   tags = {

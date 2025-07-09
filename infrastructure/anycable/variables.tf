@@ -50,28 +50,28 @@ variable "master_account_id" {
 }
 
 variable "grpc_cpu" {
-  type = number
+  type    = number
   default = 4096
 }
 
 variable "grpc_port" {
-  type = number
+  type    = number
   default = 50051
 }
 
 
 variable "grpc_memory" {
-  type = number
+  type    = number
   default = 15750
 }
 
 variable "anycable_cpu" {
-  type = number
+  type    = number
   default = 4096
 }
 
 variable "anycable_memory" {
-  type = number
+  type    = number
   default = 15750
 }
 
@@ -88,7 +88,7 @@ variable "redis_port" {
 }
 
 variable "ava_anycable_image" {
-  type = string
+  type    = string
   default = "250012284601.dkr.ecr.ca-central-1.amazonaws.com/anycable-go"
 }
 
@@ -141,7 +141,7 @@ variable "audit_replica_port" {
 }
 
 variable "tags" {
-  type    = map(string)
+  type = map(string)
 }
 
 variable "redis_security_group_id" {
@@ -270,4 +270,14 @@ variable "ava_emr_image" {
 
 variable "ava_emr_version" {
   type = string
+}
+
+variable "grpc_health_path" {
+  type    = string
+  default = "/health"
+}
+
+variable "grpc_health_port" {
+  type    = number
+  default = 54321
 }
