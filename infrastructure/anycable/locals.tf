@@ -81,6 +81,7 @@ locals {
     { "name" : "REDIS_PORT", "value" : "${var.redis_port}" },
     { "name" : "REDIS_URL", "value" : "redis://${var.redis_endpoint}:${var.redis_port}" },
     { "name" : "ANYCABLE_REDIS_URL", "value" : "redis://${var.redis_endpoint}:${var.redis_port}" },
+    { "name" : "ANYCABLE_HTTP_HEALTH_PORT", "value" : "${var.grpc_health_port}" }
   ]
   grpc_container_secrets = [
     {
