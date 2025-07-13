@@ -38,7 +38,8 @@ locals {
     { "name" : "ANYCABLE_HOST", "value" : "0.0.0.0" },
     { "name" : "ANYCABLE_PORT", "value" : "80" },
     { "name" : "ANYCABLE_RPC_HOST", "value" : "${module.grpc.ecs_service_dns}" },
-    { "name" : "ANYCABLE_RPC_PORT", "value" : "${var.grpc_port}" }
+    { "name" : "ANYCABLE_RPC_PORT", "value" : "${var.grpc_port}" },
+    { "name" : "ANYCABLE_REDIS_TLS", "value" : "true" }
   ]
   anycable_container_secrets = [
     {
