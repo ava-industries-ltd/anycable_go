@@ -37,7 +37,7 @@ locals {
     { "name" : "ANYCABLE_REDIS_URL", "value" : "redis://${var.redis_endpoint}:${var.redis_port}" },
     { "name" : "ANYCABLE_HOST", "value" : "0.0.0.0" },
     { "name" : "ANYCABLE_PORT", "value" : "80" },
-    { "name" : "ANYCABLE_RPC_HOST", "value" : "${module.grpc.ecs_service_dns}" },
+    { "name" : "ANYCABLE_RPC_HOST", "value" : "${module.grpc.ecs_service_dns}:${var.grpc_port}" },
     { "name" : "ANYCABLE_RPC_PORT", "value" : "${var.grpc_port}" },
     { "name" : "ANYCABLE_REDIS_TLS", "value" : "false" },
     { "name" : "ANYCABLE_PATH", "value" : "/cable" },
