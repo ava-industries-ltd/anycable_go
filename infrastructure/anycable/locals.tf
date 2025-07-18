@@ -68,6 +68,10 @@ locals {
     {
       "name" : "AUDIT_POSTGRES_REPLICA_USERNAME",
       "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/database/audit_postgres/replica_username"
+    },
+    {
+      "name" : "ANYCABLE_SECRET",
+      "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/application/ANYCABLE_SECRET"
     }
   ]
   grpc_container_command = ["bundle", "exec", "anycable"]
@@ -116,6 +120,10 @@ locals {
     {
       "name" : "SECRET_KEY_BASE",
       "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/application/rails/SECRET_KEY_BASE"
+    },
+    {
+      "name" : "ANYCABLE_SECRET",
+      "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/application/ANYCABLE_SECRET"
     }
   ]
 }
