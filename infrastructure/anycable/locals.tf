@@ -33,8 +33,8 @@ locals {
     { "name" : "AUDIT_POSTGRES_REPLICA_ENDPOINT", "value" : "${var.audit_replica_endpoint}" },
     { "name" : "AUDIT_POSTGRES_REPLICA_PORT", "value" : "${var.audit_replica_port}" },
     { "name" : "REDIS_PORT", "value" : "${var.redis_port}" },
-    { "name" : "REDIS_URL", "value" : "redis://${var.redis_endpoint}:${var.redis_port}" },
-    { "name" : "ANYCABLE_REDIS_URL", "value" : "redis://${var.redis_endpoint}:${var.redis_port}" },
+    { "name" : "REDIS_URL", "value" : "rediss://${var.redis_endpoint}:${var.redis_port}" },
+    { "name" : "ANYCABLE_REDIS_URL", "value" : "rediss://${var.redis_endpoint}:${var.redis_port}" },
     { "name" : "ANYCABLE_HOST", "value" : "0.0.0.0" },
     { "name" : "ANYCABLE_PORT", "value" : "80" },
     { "name" : "ANYCABLE_RPC_HOST", "value" : "${module.grpc.ecs_service_dns}:${var.grpc_port}" },
@@ -87,8 +87,8 @@ locals {
     { "name" : "AUDIT_POSTGRES_REPLICA_ENDPOINT", "value" : "${var.audit_replica_endpoint}" },
     { "name" : "AUDIT_POSTGRES_REPLICA_PORT", "value" : "${var.audit_replica_port}" },
     { "name" : "REDIS_PORT", "value" : "${var.redis_port}" },
-    { "name" : "REDIS_URL", "value" : "redis://${var.redis_endpoint}:${var.redis_port}" },
-    { "name" : "ANYCABLE_REDIS_URL", "value" : "redis://${var.redis_endpoint}:${var.redis_port}" },
+    { "name" : "REDIS_URL", "value" : "rediss://${var.redis_endpoint}:${var.redis_port}" },
+    { "name" : "ANYCABLE_REDIS_URL", "value" : "rediss://${var.redis_endpoint}:${var.redis_port}" },
     { "name" : "ANYCABLE_HTTP_HEALTH_PORT", "value" : "${var.grpc_health_port}" },
     { "name" : "ANYCABLE_RPC_HOST", "value" : "0.0.0.0:50051" }
   ]
