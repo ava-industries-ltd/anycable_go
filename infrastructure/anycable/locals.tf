@@ -42,7 +42,7 @@ locals {
     { "name" : "ANYCABLE_REDIS_TLS", "value" : "false" },
     { "name" : "ANYCABLE_PATH", "value" : "/cable" },
     { "name" : "ANYCABLE_ALLOWED_ORIGINS", "value" : "*.avaemr.ca" },
-    
+    { "name" : "ANYCABLE_TURBO_STREAMS", "value" : "true" }
   ]
   anycable_container_secrets = [
     {
@@ -72,6 +72,10 @@ locals {
     {
       "name" : "ANYCABLE_SECRET",
       "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/application/ANYCABLE_SECRET"
+    },
+    {
+      "name" : "TURBO_STREAMS_SECRET",
+      "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/application/TURBO_STREAMS_SECRET"
     }
   ]
   grpc_container_command = ["bundle", "exec", "anycable"]
