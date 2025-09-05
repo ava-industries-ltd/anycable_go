@@ -42,7 +42,14 @@ locals {
     { "name" : "ANYCABLE_REDIS_TLS", "value" : "false" },
     { "name" : "ANYCABLE_PATH", "value" : "/cable" },
     { "name" : "ANYCABLE_ALLOWED_ORIGINS", "value" : "*.avaemr.ca" },
-    { "name" : "ANYCABLE_TURBO_STREAMS", "value" : "true" }
+    { "name" : "ANYCABLE_TURBO_STREAMS", "value" : "true" },
+    { "name" : "ANYCABLE_REDIS_CHANNEL", "value" : "__anycable__" },
+    { "name" : "ANYCABLE_BROADCAST_ADAPTER", "value" : "redisx" },
+    { "name" : "ANYCABLE_BROKER", "value" : "memory" },
+    { "name" : "ANYCABLE_PUBSUB", "value" : "redis" },
+    { "name" : "ANYCABLE_HISTORY_TTL", "value" : "120" },
+    { "name" : "ANYCABLE_HISTORY_LIMIT", "value" : "100" },
+    { "name" : "ANYCABLE_RPC_CONCURRENCY", "value" : "28" }
   ]
   anycable_container_secrets = [
     {
