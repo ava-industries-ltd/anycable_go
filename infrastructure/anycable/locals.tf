@@ -85,9 +85,10 @@ locals {
       "valueFrom" : "arn:aws:ssm:${var.region}:${local.account_id}:parameter/application/TURBO_STREAMS_SECRET"
     }
   ]
-  grpc_container_command = ["bundle", "exec", "anycable"]
+  grpc_container_command = ["bundle", "exec", "anycable", "--require", "./config/environment.rb"]
   grpc_container_environment_variables = [
     { "name" : "ENVIRONMENT", "value" : "${var.rails_env}" },
+    { "name" : "RAILS_ENV", "value" : "${var.rails_env}" },
     { "name" : "POSTGRES_ENDPOINT", "value" : "${var.postgres_endpoint}" },
     { "name" : "POSTGRES_REPLICA_ENDPOINT", "value" : "${var.postgres_reader_endpoint}" },
     { "name" : "POSTGRES_DATABASE", "value" : "${var.postgres_database}" },
